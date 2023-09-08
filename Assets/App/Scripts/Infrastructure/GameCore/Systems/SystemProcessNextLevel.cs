@@ -1,6 +1,8 @@
 using App.Scripts.Infrastructure.GameCore.Commands.SwitchLevel;
+using App.Scripts.Infrastructure.LevelSelection;
 using App.Scripts.Infrastructure.LevelSelection.ViewHeader;
 using App.Scripts.Libs.Systems;
+using UnityEngine;
 
 namespace App.Scripts.Infrastructure.GameCore.Systems
 {
@@ -8,6 +10,7 @@ namespace App.Scripts.Infrastructure.GameCore.Systems
     {
         private readonly ICommandSwitchLevel _commandSwitchLevel;
         private readonly ViewLevelHeader _levelHeader;
+        private readonly IServiceLevelSelection _serviceLevelSelection;
 
         private int _requestSwitchLevel;
 

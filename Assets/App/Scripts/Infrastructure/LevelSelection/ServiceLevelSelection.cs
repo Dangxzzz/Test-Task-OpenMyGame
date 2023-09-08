@@ -7,13 +7,14 @@ namespace App.Scripts.Infrastructure.LevelSelection
         private readonly ConfigLevelSelection _configLevelSelection;
 
         private int _currentLevelIndex;
+        private bool _isLevelCorrect=true;
 
         public ServiceLevelSelection(ConfigLevelSelection configLevelSelection)
         {
             _configLevelSelection = configLevelSelection;
             CurrentLevelIndex = configLevelSelection.InitLevelIndex;
         }
-
+        
         public int CurrentLevelIndex
         {
             get => _currentLevelIndex;
@@ -25,7 +26,7 @@ namespace App.Scripts.Infrastructure.LevelSelection
         }
 
         public event Action OnSelectedLevelChanged;
-
+        
         public void UpdateSelectedLevel(int levelIndex)
         {
             if (levelIndex > _configLevelSelection.TotalLevelCount)
@@ -34,13 +35,23 @@ namespace App.Scripts.Infrastructure.LevelSelection
                 return;
             }
 
-            if (levelIndex <= 0)
+            if (levelIndex < 0)
             {
                 CurrentLevelIndex = _configLevelSelection.TotalLevelCount;
                 return;
             }
 
             CurrentLevelIndex = levelIndex;
+        }
+
+        public void IncrementCurrentLevelIndex()
+        {
+            _currentLevelIndex++;
+        }
+
+        public void DecrementCurrentLevelIndex()
+        {
+            _currentLevelIndex--;
         }
     }
 }

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Xml.XPath;
+using App.Scripts.Infrastructure.LevelSelection;
+using App.Scripts.Libs.TaskExtensions;
 using App.Scripts.Scenes.SceneFillwords.Features.FillwordModels;
 using UnityEngine;
 
@@ -11,28 +13,33 @@ namespace App.Scripts.Scenes.SceneFillwords.Features.ProviderLevel
     {
         private TextAsset _levelsDataFile = Resources.Load<TextAsset>("Fillwords/pack_0");
         private TextAsset _dictionaryDataFile = Resources.Load<TextAsset>("Fillwords/words_list");
+        private readonly IServiceLevelSelection _serviceLevelSelection;
         private string[] _dictionaryData;
-        private string[] _levelsData;
+        private List<string> _levelsData;
+        private List<int> _invalidLevelsIndex=new();
+        private ConfigLevelSelection _levelSelection;
 
+        public ProviderFillwordLevel(ConfigLevelSelection configLevelSelection)
+        {
+            _levelSelection = configLevelSelection;
+        }
         public GridFillWords LoadModel(int index)
         {
-            Debug.Log($"Try to load level : {index}");
-            _levelsData = _levelsDataFile.text.Split('\n');
-            Debug.Log($"Levels count: {_levelsData.Length}");
+            _levelsData = _levelsDataFile.text.Split('\n').ToList();
             _dictionaryData = _dictionaryDataFile.text.Split('\n');
+            CheckLevels();
+            _levelSelection.TotalLevelCount = _levelsData.Count-1;
 
-            if (index < 0 || index >= _levelsData.Length)
+            if (index < 0 || index >= _levelsData.Count)
             {
-                Debug.LogError("Invalid level index.");
+                Debug.LogError($"Invalid level index. {index}");
                 return null;
             }
-
+            Debug.Log($"Index of Level {index}");
             string currentLevel = _levelsData[index];
-            // Debug.Log($"CurrentLevel {currentLevel}");
             string[] levelParts = currentLevel.Trim().Split(' ');
 
             int gridSize = CalculateGridSize(levelParts.Where((_, i) => i % 2 != 0).ToArray());;
-            // Debug.Log($"GridSize: {gridSize} ");
 
             if (gridSize > 0)
             {
@@ -51,7 +58,30 @@ namespace App.Scripts.Scenes.SceneFillwords.Features.ProviderLevel
             }
             else
             {
-                return LoadModel(index + 2);
+                _invalidLevelsIndex.Add(index);
+                if (_levelsData.Count == _invalidLevelsIndex.Count)
+                {
+                    Debug.LogError("No valid levels!");
+                }
+                return null;
+            }
+        }
+
+        private void CheckLevels()
+        {
+            if (_invalidLevelsIndex.Count > 0)
+            {
+                for (int i = 0; i < _levelsData.Count; i++)
+                {
+                    for (int j = 0; j < _invalidLevelsIndex.Count; j++)
+                    {
+                        Debug.Log($"I {i} Invalid level index{_invalidLevelsIndex[j]}");
+                        if (i == _invalidLevelsIndex[j])
+                        {
+                            _levelsData.RemoveAt(i);
+                        }
+                    }
+                }
             }
         }
 
@@ -94,24 +124,27 @@ namespace App.Scripts.Scenes.SceneFillwords.Features.ProviderLevel
 
                 if (x >= 0 && x < gridFillWords.Size.x && y >= 0 && y < gridFillWords.Size.y)
                 {
-                    if (wordIndex >= 0 && wordIndex < _dictionaryData.Length)
-                    {
-                        string word = _dictionaryData[wordIndex].Trim();
-                        // Debug.Log($"Letter: {word[j]}");
-                        char charToAdd = word[j];
-                        CharGridModel charGridModel = new CharGridModel(charToAdd);
-                        gridFillWords.Set(y, x, charGridModel);
-                        Debug.LogError($"Y: {y} X: {x} Char{charGridModel}");
-                    }
-                    else
-                    {
-                        Debug.LogError("Invalid word index in level data.");
-                    }
+                    SetLetter(gridFillWords, wordIndex, j, y, x);
                 }
                 else
                 {
                     Debug.LogError($"Invalid size");
                 }
+            }
+        }
+
+        private void SetLetter(GridFillWords gridFillWords, int wordIndex, int j, int y, int x)
+        {
+            if (wordIndex >= 0 && wordIndex < _dictionaryData.Length)
+            {
+                string word = _dictionaryData[wordIndex].Trim();
+                char charToAdd = word[j];
+                CharGridModel charGridModel = new CharGridModel(charToAdd);
+                gridFillWords.Set(y, x, charGridModel);
+            }
+            else
+            {
+                Debug.LogError("Invalid word index in level data.");
             }
         }
     }

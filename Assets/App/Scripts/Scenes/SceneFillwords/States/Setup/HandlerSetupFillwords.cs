@@ -27,9 +27,11 @@ namespace App.Scripts.Scenes.SceneFillwords.States.Setup
 
         public Task Process()
         {
-            Debug.Log($"CurrentLevel{_serviceLevelSelection.CurrentLevelIndex}");
             var model = _providerFillwordLevel.LoadModel(_serviceLevelSelection.CurrentLevelIndex);
-
+            if (model == null)
+            {
+                model = _providerFillwordLevel.LoadModel(_serviceLevelSelection.CurrentLevelIndex);
+            }
             _viewGridLetters.UpdateItems(model);
             _containerGrid.SetupGrid(model, _serviceLevelSelection.CurrentLevelIndex);
             return Task.CompletedTask;
