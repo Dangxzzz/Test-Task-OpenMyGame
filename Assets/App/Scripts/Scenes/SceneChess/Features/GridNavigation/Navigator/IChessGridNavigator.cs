@@ -7,6 +7,6 @@ namespace App.Scripts.Scenes.SceneChess.Features.GridNavigation.Navigator
 {
     public interface IChessGridNavigator
     {
-        List<Vector2Int> FindPath(ChessUnitType unit, Vector2Int @from, Vector2Int to, ChessGrid grid);
+        List<Vector2Int> FindPath(ChessUnitType unit, Vector2Int from, Vector2Int to, ChessGrid grid);
     }
 }

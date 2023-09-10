@@ -48,7 +48,6 @@ namespace App.Scripts.Scenes.SceneChess.Systems
                 Vector3 point = _gridField.GetCellPosition(cell);
                 path.Add(point);
             }
-
             return path;
         }
     }
