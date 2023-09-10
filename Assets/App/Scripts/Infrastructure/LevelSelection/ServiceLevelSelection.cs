@@ -15,6 +15,7 @@ namespace App.Scripts.Infrastructure.LevelSelection
             CurrentLevelIndex = configLevelSelection.InitLevelIndex;
         }
         
+        
         public int CurrentLevelIndex
         {
             get => _currentLevelIndex;
@@ -31,7 +32,7 @@ namespace App.Scripts.Infrastructure.LevelSelection
         {
             if (levelIndex > _configLevelSelection.TotalLevelCount)
             {
-                CurrentLevelIndex = 1;
+                CurrentLevelIndex = 0;
                 return;
             }
 

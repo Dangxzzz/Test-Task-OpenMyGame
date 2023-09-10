@@ -11,5 +11,6 @@ namespace App.Scripts.Infrastructure.LevelSelection
 
         void IncrementCurrentLevelIndex();
         void DecrementCurrentLevelIndex();
+        
     }
 }

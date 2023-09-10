@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.XPath;
 using App.Scripts.Infrastructure.LevelSelection;
-using App.Scripts.Libs.TaskExtensions;
 using App.Scripts.Scenes.SceneFillwords.Features.FillwordModels;
 using UnityEngine;
 
@@ -23,19 +20,17 @@ namespace App.Scripts.Scenes.SceneFillwords.Features.ProviderLevel
         {
             _levelSelection = configLevelSelection;
         }
+        
         public GridFillWords LoadModel(int index)
         {
             _levelsData = _levelsDataFile.text.Split('\n').ToList();
             _dictionaryData = _dictionaryDataFile.text.Split('\n');
             CheckLevels();
-            _levelSelection.TotalLevelCount = _levelsData.Count-1;
-
             if (index < 0 || index >= _levelsData.Count)
             {
                 Debug.LogError($"Invalid level index. {index}");
                 return null;
             }
-            Debug.Log($"Index of Level {index}");
             string currentLevel = _levelsData[index];
             string[] levelParts = currentLevel.Trim().Split(' ');
 
@@ -75,13 +70,18 @@ namespace App.Scripts.Scenes.SceneFillwords.Features.ProviderLevel
                 {
                     for (int j = 0; j < _invalidLevelsIndex.Count; j++)
                     {
-                        Debug.Log($"I {i} Invalid level index{_invalidLevelsIndex[j]}");
-                        if (i == _invalidLevelsIndex[j])
-                        {
-                            _levelsData.RemoveAt(i);
-                        }
+                        DeleteLevel(i, j);
                     }
                 }
+            }
+        }
+
+        private void DeleteLevel(int i, int j)
+        {
+            if (i == _invalidLevelsIndex[j])
+            {
+                _levelsData.RemoveAt(i);
+                _levelSelection.TotalLevelCount = _levelsData.Count - 1;
             }
         }
 

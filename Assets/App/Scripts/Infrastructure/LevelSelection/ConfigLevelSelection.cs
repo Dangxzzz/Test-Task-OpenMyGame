@@ -7,5 +7,6 @@ namespace App.Scripts.Infrastructure.LevelSelection
     {
         public int TotalLevelCount;
         public int InitLevelIndex = 1;
+        
     }
 }
