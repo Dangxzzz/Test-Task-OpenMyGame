@@ -9,8 +9,5 @@ namespace App.Scripts.Infrastructure.LevelSelection
         
         void UpdateSelectedLevel(int levelIndex);
 
-        void IncrementCurrentLevelIndex();
-        void DecrementCurrentLevelIndex();
-        
     }
 }

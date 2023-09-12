@@ -3,6 +3,7 @@ using App.Scripts.Scenes.SceneChess.Features.ChessField.Container;
 using App.Scripts.Scenes.SceneChess.Features.ChessSelection;
 using App.Scripts.Scenes.SceneChess.Features.GridNavigation;
 using App.Scripts.Scenes.SceneChess.Features.GridNavigation.Navigator;
+using UnityEngine;
 
 namespace App.Scripts.Scenes.SceneChess.Systems
 {
@@ -42,8 +43,12 @@ namespace App.Scripts.Scenes.SceneChess.Systems
         {
             var grid = _containerChessLevel.Grid;
             var piece = grid.Get(move.From);
-            var pathCells = _chessGridNavigator.FindPath(piece.PieceModel.PieceType, move.From, move.To, grid);
-            if (pathCells is null) return;
+            var pathCells = _chessGridNavigator.FindPath(piece.PieceModel.PieceType, move.From, move.To, grid,piece.PieceModel.Color);
+            if (pathCells is null)
+            {
+                Debug.Log("Return null");
+                return;
+            }
 
             move.Path = pathCells;
             move.ChessUnit = piece;

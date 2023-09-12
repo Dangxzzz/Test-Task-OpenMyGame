@@ -32,11 +32,11 @@ namespace App.Scripts.Infrastructure.LevelSelection
         {
             if (levelIndex > _configLevelSelection.TotalLevelCount)
             {
-                CurrentLevelIndex = 0;
+                CurrentLevelIndex = 1;
                 return;
             }
 
-            if (levelIndex < 0)
+            if (levelIndex <= 0)
             {
                 CurrentLevelIndex = _configLevelSelection.TotalLevelCount;
                 return;

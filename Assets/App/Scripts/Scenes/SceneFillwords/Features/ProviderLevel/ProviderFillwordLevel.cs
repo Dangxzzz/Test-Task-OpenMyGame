@@ -20,18 +20,23 @@ namespace App.Scripts.Scenes.SceneFillwords.Features.ProviderLevel
         {
             _levelSelection = configLevelSelection;
         }
+
+        public ConfigLevelSelection GetLevelsCount()
+        {
+            return _levelSelection;
+        }
         
         public GridFillWords LoadModel(int index)
         {
             _levelsData = _levelsDataFile.text.Split('\n').ToList();
             _dictionaryData = _dictionaryDataFile.text.Split('\n');
             CheckLevels();
-            if (index < 0 || index >= _levelsData.Count)
+            if (index-1 < 0 || index-1 >= _levelsData.Count)
             {
                 Debug.LogError($"Invalid level index. {index}");
                 return null;
             }
-            string currentLevel = _levelsData[index];
+            string currentLevel = _levelsData[index-1];
             string[] levelParts = currentLevel.Trim().Split(' ');
 
             int gridSize = CalculateGridSize(levelParts.Where((_, i) => i % 2 != 0).ToArray());;
@@ -53,8 +58,8 @@ namespace App.Scripts.Scenes.SceneFillwords.Features.ProviderLevel
             }
             else
             {
-                _invalidLevelsIndex.Add(index);
-                if (_levelsData.Count == _invalidLevelsIndex.Count)
+                _invalidLevelsIndex.Add(index-1);
+                if (_levelsData.Count == 0)
                 {
                     Debug.LogError("No valid levels!");
                 }
@@ -81,7 +86,7 @@ namespace App.Scripts.Scenes.SceneFillwords.Features.ProviderLevel
             if (i == _invalidLevelsIndex[j])
             {
                 _levelsData.RemoveAt(i);
-                _levelSelection.TotalLevelCount = _levelsData.Count - 1;
+                _levelSelection.TotalLevelCount = _levelsData.Count;
             }
         }
 

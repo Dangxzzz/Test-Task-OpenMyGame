@@ -33,3 +33,6 @@ MonoBehaviour:
     - cell: {x: 7, y: 6}
       color: 1
       pieceType: 0
+    - cell: {x: 5, y: 5}
+      color: 0
+      pieceType: 0
