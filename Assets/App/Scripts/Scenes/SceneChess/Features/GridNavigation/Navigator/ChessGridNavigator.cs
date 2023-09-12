@@ -8,7 +8,7 @@ namespace App.Scripts.Scenes.SceneChess.Features.GridNavigation.Navigator
 {
     public class ChessGridNavigator : IChessGridNavigator
     {
-public List<Vector2Int> FindPath(ChessUnitType unit, Vector2Int from, Vector2Int to, ChessGrid grid,ChessUnitColor unitColor)
+public List<Vector2Int> FindPath(ChessUnitType unit, Vector2Int from, Vector2Int to, ChessGrid grid)
         {
             if (!IsValidPosition(from, grid) || !IsValidPosition(to, grid) || from == to)
             {
@@ -44,7 +44,7 @@ public List<Vector2Int> FindPath(ChessUnitType unit, Vector2Int from, Vector2Int
                 openSet.RemoveAt(lowestMoveCountIndex);
                 closedSet.Add(currentNode.Position);
 
-                var neighbors = FindNeighbors(unit, to, grid, currentNode,unitColor);
+                var neighbors = FindNeighbors(unit, to, grid, currentNode);
 
                 CheckPaths(neighbors, closedSet, currentNode, openSet);
             }
@@ -82,7 +82,7 @@ private static void CheckPaths(List<Vector2Int> neighbors, HashSet<Vector2Int> c
     }
 }
 
-private List<Vector2Int> FindNeighbors(ChessUnitType unit, Vector2Int to, ChessGrid grid, PathNode currentNode,ChessUnitColor unitColor)
+private List<Vector2Int> FindNeighbors(ChessUnitType unit, Vector2Int to, ChessGrid grid, PathNode currentNode)
        {
            List<Vector2Int> neighbors = new List<Vector2Int>();
 
@@ -104,7 +104,7 @@ private List<Vector2Int> FindNeighbors(ChessUnitType unit, Vector2Int to, ChessG
             neighbors = GetKingNeighbors(currentNode.Position, to, grid);
             break;
         case ChessUnitType.Pon:
-            neighbors = GetPawnNeighbors(currentNode.Position, grid,unitColor);
+            neighbors = GetPawnNeighbors(currentNode.Position, grid);
             break;
     }
 
@@ -280,23 +280,19 @@ private List<Vector2Int> ReversePath(PathNode endNode)
             return neighbors;
         }
 
-        private List<Vector2Int> GetPawnNeighbors(Vector2Int position, ChessGrid grid,ChessUnitColor unitColor)
+        private List<Vector2Int> GetPawnNeighbors(Vector2Int position, ChessGrid grid)
         {
             List<Vector2Int> neighbors = new List<Vector2Int>();
-            Vector2Int forwardPosition;
-            if (unitColor == ChessUnitColor.White)
+            Vector2Int forwardPositionUp = position + new Vector2Int(0, 1);
+            Vector2Int forwardPositionDown = position + new Vector2Int(0, -1);
+            if (IsValidPosition(forwardPositionUp, grid) && grid.Get(forwardPositionUp) == null)
             {
-                forwardPosition = position + new Vector2Int(0, 1);
+                neighbors.Add(forwardPositionUp);
             }
-            else
+            if (IsValidPosition(forwardPositionDown, grid) && grid.Get(forwardPositionDown) == null)
             {
-                forwardPosition = position + new Vector2Int(0, -1);
+                neighbors.Add(forwardPositionDown);
             }
-            if (IsValidPosition(forwardPosition, grid) && grid.Get(forwardPosition) == null)
-            {
-                neighbors.Add(forwardPosition);
-            }
-
             return neighbors;
         }
         

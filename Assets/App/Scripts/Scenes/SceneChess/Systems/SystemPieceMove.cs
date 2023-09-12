@@ -43,7 +43,7 @@ namespace App.Scripts.Scenes.SceneChess.Systems
         {
             var grid = _containerChessLevel.Grid;
             var piece = grid.Get(move.From);
-            var pathCells = _chessGridNavigator.FindPath(piece.PieceModel.PieceType, move.From, move.To, grid,piece.PieceModel.Color);
+            var pathCells = _chessGridNavigator.FindPath(piece.PieceModel.PieceType, move.From, move.To, grid);
             if (pathCells is null)
             {
                 Debug.Log("Return null");
