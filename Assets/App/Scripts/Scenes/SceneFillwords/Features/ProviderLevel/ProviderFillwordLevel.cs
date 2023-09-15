@@ -8,8 +8,8 @@ namespace App.Scripts.Scenes.SceneFillwords.Features.ProviderLevel
 {
     public class ProviderFillwordLevel : IProviderFillwordLevel
     {
-        private TextAsset _levelsDataFile = Resources.Load<TextAsset>("Fillwords/pack_0");
-        private TextAsset _dictionaryDataFile = Resources.Load<TextAsset>("Fillwords/words_list");
+        private readonly TextAsset  _levelsDataFile = Resources.Load<TextAsset>("Fillwords/pack_0");
+        private readonly TextAsset _dictionaryDataFile = Resources.Load<TextAsset>("Fillwords/words_list");
         private readonly IServiceLevelSelection _serviceLevelSelection;
         private string[] _dictionaryData;
         private List<string> _levelsData;
@@ -120,16 +120,16 @@ namespace App.Scripts.Scenes.SceneFillwords.Features.ProviderLevel
 
         private void FillGridWithLetters(GridFillWords gridFillWords, string[] positions, int wordIndex)
         {
-            for (int j = 0; j < positions.Length; j++)
+            for (int i = 0; i < positions.Length; i++)
             {
-                int position = int.Parse(positions[j]);
+                int position = int.Parse(positions[i]);
 
                 int x = (position) % gridFillWords.Size.x;
                 int y = (position) / gridFillWords.Size.x;
 
                 if (x >= 0 && x < gridFillWords.Size.x && y >= 0 && y < gridFillWords.Size.y)
                 {
-                    SetLetter(gridFillWords, wordIndex, j, y, x);
+                    SetLetter(gridFillWords, wordIndex, i, y, x);
                 }
                 else
                 {
@@ -138,12 +138,12 @@ namespace App.Scripts.Scenes.SceneFillwords.Features.ProviderLevel
             }
         }
 
-        private void SetLetter(GridFillWords gridFillWords, int wordIndex, int j, int y, int x)
+        private void SetLetter(GridFillWords gridFillWords, int wordIndex, int i, int y, int x)
         {
             if (wordIndex >= 0 && wordIndex < _dictionaryData.Length)
             {
                 string word = _dictionaryData[wordIndex].Trim();
-                char charToAdd = word[j];
+                char charToAdd = word[i];
                 CharGridModel charGridModel = new CharGridModel(charToAdd);
                 gridFillWords.Set(y, x, charGridModel);
             }

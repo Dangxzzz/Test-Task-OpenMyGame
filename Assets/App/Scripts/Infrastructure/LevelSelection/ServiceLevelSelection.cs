@@ -7,7 +7,6 @@ namespace App.Scripts.Infrastructure.LevelSelection
         private readonly ConfigLevelSelection _configLevelSelection;
 
         private int _currentLevelIndex;
-        private bool _isLevelCorrect=true;
 
         public ServiceLevelSelection(ConfigLevelSelection configLevelSelection)
         {
@@ -43,16 +42,6 @@ namespace App.Scripts.Infrastructure.LevelSelection
             }
 
             CurrentLevelIndex = levelIndex;
-        }
-
-        public void IncrementCurrentLevelIndex()
-        {
-            _currentLevelIndex++;
-        }
-
-        public void DecrementCurrentLevelIndex()
-        {
-            _currentLevelIndex--;
         }
     }
 }

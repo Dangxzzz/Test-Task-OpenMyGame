@@ -23,7 +23,6 @@ namespace App.Scripts.Scenes.SceneWordSearch.Features.Level.BuilderLevelModel
         private List<char> BuildListChars(List<string> words)
         {
             List<char> uniqueChars = new List<char>();
-
             foreach (string word in words)
             {
                 foreach (char letter in word)

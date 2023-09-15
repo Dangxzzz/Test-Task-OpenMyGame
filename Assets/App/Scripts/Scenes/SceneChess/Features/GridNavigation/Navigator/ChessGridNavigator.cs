@@ -8,6 +8,7 @@ namespace App.Scripts.Scenes.SceneChess.Features.GridNavigation.Navigator
 {
     public class ChessGridNavigator : IChessGridNavigator
     {
+        
 public List<Vector2Int> FindPath(ChessUnitType unit, Vector2Int from, Vector2Int to, ChessGrid grid)
         {
             if (!IsValidPosition(from, grid) || !IsValidPosition(to, grid) || from == to)
@@ -21,7 +22,6 @@ public List<Vector2Int> FindPath(ChessUnitType unit, Vector2Int from, Vector2Int
             
             PathNode startNode = new PathNode(from, null, 0);
             openSet.Add(startNode);
-
             while (openSet.Count > 0)
             {
                 int lowestMoveCountIndex = 0;
@@ -73,7 +73,7 @@ private static void CheckPaths(List<Vector2Int> neighbors, HashSet<Vector2Int> c
         }
         else
         {
-            int existingNeighborIndex = openSet.FindIndex(n => n.Position == neighborNode.Position);
+            int existingNeighborIndex = openSet.FindIndex(node => node.Position == neighborNode.Position);
             if (newMoveCount < openSet[existingNeighborIndex].MoveCount)
             {
                 openSet[existingNeighborIndex] = neighborNode;
@@ -132,24 +132,6 @@ private List<Vector2Int> ReversePath(PathNode endNode)
             return position.x >= 0 && position.x < grid.Size.x && position.y >= 0 && position.y < grid.Size.y;
         }
 
-        private List<Vector2Int> GetQueenNeighbors(Vector2Int position, ChessGrid grid)
-        {
-            List<Vector2Int> neighbors = new List<Vector2Int>();
-            Vector2Int[] directions =
-            {
-                new Vector2Int(-1, -1), 
-                new Vector2Int(0, -1),  
-                new Vector2Int(1, -1),  
-                new Vector2Int(-1, 0), 
-                new Vector2Int(1, 0),   
-                new Vector2Int(-1, 1),  
-                new Vector2Int(0, 1),   
-                new Vector2Int(1, 1)    
-            };
-            CheckNeighbords(position, grid, directions, neighbors);
-            return neighbors;
-        }
-
         private void CheckNeighbords(Vector2Int position, ChessGrid grid, Vector2Int[] directions, List<Vector2Int> neighbors)
         {
             foreach (var direction in directions)
@@ -169,7 +151,25 @@ private List<Vector2Int> ReversePath(PathNode endNode)
                 }
             }
         }
-
+        
+        private List<Vector2Int> GetQueenNeighbors(Vector2Int position, ChessGrid grid)
+        {
+            List<Vector2Int> neighbors = new List<Vector2Int>();
+            Vector2Int[] directions =
+            {
+                new Vector2Int(-1, -1), 
+                new Vector2Int(0, -1),  
+                new Vector2Int(1, -1),  
+                new Vector2Int(-1, 0), 
+                new Vector2Int(1, 0),   
+                new Vector2Int(-1, 1),  
+                new Vector2Int(0, 1),   
+                new Vector2Int(1, 1)    
+            };
+            CheckNeighbords(position, grid, directions, neighbors);
+            return neighbors;
+        }
+        
         private List<Vector2Int> GetBishopNeighbors(Vector2Int position, ChessGrid grid)
         {
             List<Vector2Int> neighbors = new List<Vector2Int>();
@@ -250,7 +250,7 @@ private List<Vector2Int> ReversePath(PathNode endNode)
                 new Vector2Int(1, 1)   
             };
 
-            List<(Vector2Int, int)> neighborFScores = new List<(Vector2Int, int)>();
+            List<(Vector2Int, int)> neighborFullScores = new List<(Vector2Int, int)>();
 
             foreach (var direction in directions)
             {
@@ -262,19 +262,19 @@ private List<Vector2Int> ReversePath(PathNode endNode)
             
                     if (targetPiece == null)
                     {
-                        int gScore = Mathf.Abs(neighborPosition.x - target.x) + Mathf.Abs(neighborPosition.y - target.y);
-                        int fScore = gScore;
+                        int fullPathScore = Mathf.Abs(neighborPosition.x - target.x) + Mathf.Abs(neighborPosition.y - target.y);
+                        int fullScores = fullPathScore;
 
-                        neighborFScores.Add((neighborPosition, fScore));
+                        neighborFullScores.Add((neighborPosition, fullScores));
                     }
                 }
             }
             
-            neighborFScores.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+            neighborFullScores.Sort((x, y) => x.Item2.CompareTo(y.Item2));
             
-            foreach (var neighborFScore in neighborFScores)
+            foreach (var neighborFullScore in neighborFullScores)
             {
-                neighbors.Add(neighborFScore.Item1);
+                neighbors.Add(neighborFullScore.Item1);
             }
 
             return neighbors;

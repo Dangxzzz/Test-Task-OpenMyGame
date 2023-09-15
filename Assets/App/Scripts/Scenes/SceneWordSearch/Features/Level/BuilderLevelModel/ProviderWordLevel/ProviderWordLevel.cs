@@ -6,12 +6,14 @@ namespace App.Scripts.Scenes.SceneWordSearch.Features.Level.BuilderLevelModel.Pr
 {
     public class ProviderWordLevel : IProviderWordLevel
     {
+
+        private LevelInfo _levelInfo = new();
         public LevelInfo LoadLevelData(int levelIndex)
         {
             string jsonFileName = "WordSearch/Levels/" + levelIndex;
             TextAsset jsonFile = Resources.Load<TextAsset>(jsonFileName);
 
-            LevelInfo levelInfo = new LevelInfo();
+            // LevelInfo _levelInfo = new LevelInfo();
 
             if (jsonFile != null)
             {
@@ -19,7 +21,7 @@ namespace App.Scripts.Scenes.SceneWordSearch.Features.Level.BuilderLevelModel.Pr
                     LevelData levelData = JsonUtility.FromJson<LevelData>(jsonFile.text);
                     if (levelData != null)
                     {
-                        levelInfo.words = new List<string>(levelData.words);
+                        _levelInfo.words = new List<string>(levelData.words);
                     }
                     else
                     {
@@ -31,7 +33,7 @@ namespace App.Scripts.Scenes.SceneWordSearch.Features.Level.BuilderLevelModel.Pr
                 Debug.LogError("Level file not found: " + jsonFileName);
             }
 
-            return levelInfo;
+            return _levelInfo;
         }
     }
     
